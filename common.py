@@ -1,4 +1,5 @@
 from hashlib import sha256
+import sys
 import numpy as np
 
 NUM_ROUNDS = 137
@@ -203,6 +204,9 @@ def generate_challenges(commitments, rounds):
 def aes_prove(aes_plaintext, aes_key):
 	keys, views, commitments = [], [], []
 	for i in range(NUM_ROUNDS):
+		sys.stdout.write("> Round %03d" % i)
+		sys.stdout.flush()
+
 		# generate random keys for three parties
 		k = tuple(np.random.bytes(KEY_LEN) for _ in range(3))
 		keys.append(k)
@@ -214,6 +218,9 @@ def aes_prove(aes_plaintext, aes_key):
 		# generate commitments
 		hashed_view_tuple = tuple(hash_view(v) for v in view_tuple)
 		commitments.append((hashed_view_tuple, y_tuple))
+
+		sys.stdout.write("\b" * 12)
+		sys.stdout.flush()
 	
 	challenges = generate_challenges(commitments, NUM_ROUNDS)
 
@@ -339,7 +346,13 @@ def aes_verify_round(aes_plaintext, aes_ciphertext, hashed_view_tuple, y_tuple, 
 def aes_verify(aes_plaintext, aes_ciphertext, commitments, responses):
 	challenges = generate_challenges(commitments, NUM_ROUNDS)
 	for i in range(NUM_ROUNDS):
+		sys.stdout.write("> Round %03d" % i)
+		sys.stdout.flush()
+
 		hashed_view_tuple, y_tuple = commitments[i]
 		if not aes_verify_round(aes_plaintext, aes_ciphertext, hashed_view_tuple, y_tuple, challenges[i], responses[i]):
 			return False
+
+		sys.stdout.write("\b" * 12)
+		sys.stdout.flush()
 	return True

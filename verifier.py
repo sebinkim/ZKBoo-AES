@@ -4,7 +4,7 @@ import pickle
 if __name__ == "__main__":
 	hex = ""
 	while True:
-		print("Enter plaintext in hex (16-byte)")
+		print("Enter plaintext in hex (16-byte): ", end='')
 		hex = input()
 		if len(hex) != 32:
 			print("Must be 16-byte string")
@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
 	hex = ""
 	while True:
-		print("Enter ciphertext in hex (16-byte)")
+		print("Enter ciphertext in hex (16-byte): ", end='')
 		hex = input()
 		if len(hex) != 32:
 			print("Must be 16-byte string")
@@ -22,11 +22,21 @@ if __name__ == "__main__":
 			break
 	aes_ciphertext = bytearray.fromhex(hex)
 
-	print("Enter filename for proof")
+	print()
+	print("Plaintext:", aes_plaintext.hex())
+	print("Ciphertext:", aes_ciphertext.hex())
+
+	print()
+	print("Enter filename for proof: ", end='')
 	filename = input()
+	print()
+	
 	with open(filename, "rb") as f:
 		commitments = pickle.load(f)
 		responses = pickle.load(f)
 
-		print("Accepted" if aes_verify(aes_plaintext, aes_ciphertext, commitments, responses) else "Rejected")
+		accepted = aes_verify(aes_plaintext, aes_ciphertext, commitments, responses)
+
+		print("\n")
+		print("Accepted" if accepted else "Rejected")
 	
