@@ -1,5 +1,6 @@
-from common import *
+from verifier_lib import aes_verify
 import pickle
+from datetime import datetime
 
 if __name__ == "__main__":
 	hex = ""
@@ -30,13 +31,17 @@ if __name__ == "__main__":
 	print("Enter filename for proof: ", end='')
 	filename = input()
 	print()
-	
+
 	with open(filename, "rb") as f:
 		commitments = pickle.load(f)
 		responses = pickle.load(f)
 
+		st = datetime.now()
 		accepted = aes_verify(aes_plaintext, aes_ciphertext, commitments, responses)
+		en = datetime.now()
+		
 
 		print("\n")
 		print("Accepted" if accepted else "Rejected")
+		print(round((en - st).total_seconds() * 1000, 3), "ms")
 	

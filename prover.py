@@ -1,5 +1,7 @@
-from common import *
+from prover_lib import aes_prove
+from common import aes_test
 import pickle
+from datetime import datetime
 
 if __name__ == "__main__":
 	hex = ""
@@ -34,7 +36,9 @@ if __name__ == "__main__":
 	filename = input()
 	print()
 
+	st = datetime.now()
 	commitments, responses = aes_prove(aes_plaintext, aes_key)
+	en = datetime.now()
 	
 	with open(filename, "wb") as f:
 		pickle.dump(commitments, f)
@@ -42,4 +46,5 @@ if __name__ == "__main__":
 
 	print("\n")
 	print("Proof generated in", filename)
+	print(round((en - st).total_seconds() * 1000, 3), "ms")
 	
