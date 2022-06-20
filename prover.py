@@ -1,4 +1,5 @@
-from common import *
+from prover_lib import aes_prove
+from common import aes_test
 import pickle
 from datetime import datetime
 

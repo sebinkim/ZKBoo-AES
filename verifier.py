@@ -1,4 +1,4 @@
-from common import *
+from verifier_lib import aes_verify
 import pickle
 from datetime import datetime
 
